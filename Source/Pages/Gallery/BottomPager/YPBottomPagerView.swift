@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Stevia
+
 
 final class YPBottomPagerView: UIView {
     
@@ -31,7 +31,7 @@ final class YPBottomPagerView: UIView {
         )
         
         if #available(iOS 11.0, *) {
-            header.Bottom == safeAreaLayoutGuide.Bottom
+            header.SteviaBottom == safeAreaLayoutGuide.SteviaBottom
         } else {
             header.bottom(0)
         }

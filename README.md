@@ -286,7 +286,7 @@ UIBarButtonItem.appearance().setTitleTextAttributes(attributes, for: .normal) //
 ### Navigation bar Text colors
 ```swift
 UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor : UIColor.yellow ] // Title color
-UINavigationBar.appearance().tintColor = .red // Left. bar buttons
+UINavigationBar.appearance().tintColor = .red // SteviaLeft. bar buttons
 config.colors.tintColor = .green // Right bar buttons (actions)
 ```
 

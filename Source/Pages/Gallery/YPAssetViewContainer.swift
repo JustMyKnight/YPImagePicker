@@ -8,7 +8,7 @@
 
 import Foundation
 import UIKit
-import Stevia
+
 import AVFoundation
 
 /// The container for asset (video or image). It containts the YPGridView and YPAssetZoomableView.
@@ -84,13 +84,13 @@ final class YPAssetViewContainer: UIView {
             sv(squareCropButton)
             squareCropButton.size(42)
             |-15-squareCropButton
-            squareCropButton.Bottom == self.Bottom - 15
+            squareCropButton.SteviaBottom == self.SteviaBottom - 15
         }
 
         // Multiple selection button
         sv(multipleSelectionButton)
         multipleSelectionButton.size(42).trailing(15)
-        multipleSelectionButton.Bottom == self.Bottom - 15
+        multipleSelectionButton.SteviaBottom == self.SteviaBottom - 15
     }
 
     required init?(coder: NSCoder) {

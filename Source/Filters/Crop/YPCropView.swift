@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Stevia
 
 final class YPCropView: UIView {
     
@@ -78,15 +77,15 @@ final class YPCropView: UIView {
         bottomCurtain.height(>=defaultCurtainPadding)
         
         leadingCurtain.width(>=horizontalCurtainMinWidth)
-        leadingCurtain.Top == topCurtain.Bottom
-        leadingCurtain.Bottom == bottomCurtain.Top
+        leadingCurtain.SteviaTop == topCurtain.SteviaBottom
+        leadingCurtain.SteviaBottom == bottomCurtain.SteviaTop
         
         trailingCurtain.width(>=horizontalCurtainMinWidth)
-        trailingCurtain.Top == topCurtain.Bottom
-        trailingCurtain.Bottom == bottomCurtain.Top
+        trailingCurtain.SteviaTop == topCurtain.SteviaBottom
+        trailingCurtain.SteviaBottom == bottomCurtain.SteviaTop
     
-        cropArea.Top == topCurtain.Bottom
-        cropArea.Bottom == bottomCurtain.Top
+        cropArea.SteviaTop == topCurtain.SteviaBottom
+        cropArea.SteviaBottom == bottomCurtain.SteviaTop
           
         |leadingCurtain--0--cropArea--0--trailingCurtain|
 
@@ -107,13 +106,13 @@ final class YPCropView: UIView {
         )
     
         if #available(iOS 11.0, *) {
-            toolbar.Bottom == safeAreaLayoutGuide.Bottom
+            toolbar.SteviaBottom == safeAreaLayoutGuide.SteviaBottom
         } else {
             toolbar.bottom(0)
         }
                 
         let complementRatio: CGFloat = CGFloat(1.0 / ratio)
-        cropArea.Height == cropArea.Width * complementRatio
+        cropArea.SteviaHeight == cropArea.SteviaWidth * complementRatio
         cropArea.centerInContainer()
     }
     
@@ -127,14 +126,14 @@ final class YPCropView: UIView {
             imageView.width(image.size.width * scaledDownRatio)
             imageView.centerInContainer()
         } else if ratio < imageRatio {
-            imageView.Height == cropArea.Height
+            imageView.SteviaHeight == cropArea.SteviaHeight
             imageView.centerInContainer()
         } else {
             imageView.followEdges(cropArea)
         }
         
         // Fit imageView to image's bounds
-        imageView.Width == imageView.Height * CGFloat(imageRatio)
+        imageView.SteviaWidth == imageView.SteviaHeight * CGFloat(imageRatio)
     }
     
     private func applyStyle() {

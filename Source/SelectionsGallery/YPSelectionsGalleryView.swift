@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Stevia
+
 
 class YPSelectionsGalleryView: UIView {
     
@@ -23,12 +23,12 @@ class YPSelectionsGalleryView: UIView {
         // Layout collectionView
         collectionView.heightEqualsWidth()
         if #available(iOS 11.0, *) {
-            collectionView.Right == safeAreaLayoutGuide.Right
-            collectionView.Left == safeAreaLayoutGuide.Left
+            collectionView.SteviaRight == safeAreaLayoutGuide.SteviaRight
+            collectionView.SteviaLeft == safeAreaLayoutGuide.SteviaLeft
         } else {
             |collectionView|
         }
-        collectionView.CenterY == CenterY - 30
+        collectionView.SteviaCenterY == SteviaCenterY - 30
         
         // Apply style
         backgroundColor = YPConfig.colors.selectionsBackgroundColor

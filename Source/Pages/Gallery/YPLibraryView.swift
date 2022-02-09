@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Stevia
+
 import Photos
 
 internal final class YPLibraryView: UIView {
@@ -184,21 +184,21 @@ internal final class YPLibraryView: UIView {
         collectionContainerView.fillContainer()
         collectionView.fillHorizontally().bottom(0)
 
-        assetViewContainer.Bottom == line.Top
+        assetViewContainer.SteviaBottom == line.SteviaTop
         line.height(1)
         line.fillHorizontally()
 
         assetViewContainer.top(0).fillHorizontally().heightEqualsWidth()
         self.assetViewContainerConstraintTop = assetViewContainer.topConstraint
         assetZoomableView.fillContainer().heightEqualsWidth()
-        assetZoomableView.Bottom == collectionView.Top
+        assetZoomableView.SteviaBottom == collectionView.SteviaTop
         assetViewContainer.sendSubviewToBack(assetZoomableView)
 
         progressView.height(5).fillHorizontally()
-        progressView.Bottom == line.Top
+        progressView.SteviaBottom == line.SteviaTop
 
         |maxNumberWarningView|.bottom(0)
-        maxNumberWarningView.Top == safeAreaLayoutGuide.Bottom - 40
+        maxNumberWarningView.SteviaTop == safeAreaLayoutGuide.SteviaBottom - 40
         maxNumberWarningLabel.centerHorizontally().top(11)
     }
 }

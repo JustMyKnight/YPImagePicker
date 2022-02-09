@@ -6,97 +6,409 @@
 //  Copyright © 2016 Sacha Durand Saint Omer. All rights reserved.
 //
 
-import Foundation
-
-prefix operator >= {}
-public prefix func >= (p: CGFloat) -> SteviaFlexibleMargin {
-    return SteviaFlexibleMargin(points: p, relation: .GreaterThanOrEqual)
-}
-
-prefix operator <= {}
-public prefix func <= (p: CGFloat) -> SteviaFlexibleMargin {
-    return SteviaFlexibleMargin(points: p, relation: .LessThanOrEqual)
-}
-
-public struct SteviaFlexibleMargin {
-    var points:CGFloat!
-    var relation:NSLayoutRelation!
-}
-
-
-public struct PartialFlexibleConstraint {
-    var fm:SteviaFlexibleMargin!
-    var view1:UIView?
-    var views:[UIView]?
-}
-
-public func - (left: UIView, right: SteviaFlexibleMargin) -> PartialFlexibleConstraint {
-    return PartialFlexibleConstraint(fm: right, view1: left, views: nil)
-}
-
-public func - (left: [UIView], right: SteviaFlexibleMargin) -> PartialFlexibleConstraint {
-    return PartialFlexibleConstraint(fm: right, view1: nil, views: left)
-}
-
-public func - (left: PartialFlexibleConstraint, right:UIView) -> [UIView] {
-    if let views = left.views {
-        if let spv = right.superview {
-            let c = constraint(item: right, attribute: .Left, toItem: views.last, attribute: .Right, relatedBy:left.fm.relation, constant: left.fm.points)
-            spv.addConstraint(c)
-        }
-        return views + [right]
-    } else {
-        if let spv = right.superview {
-            let c = constraint(item: right, attribute: .Left, toItem: left.view1!, attribute: .Right, relatedBy:left.fm.relation, constant: left.fm.points)
-            spv.addConstraint(c)
-        }
-        return [left.view1!, right]
-    }
-}
+#if canImport(UIKit)
+import UIKit
 
 public extension UIView {
     
-    public func left(points:CGFloat) -> UIView {
-        return position(.Left, points: points)
+    /** Sets the left margin for a view.
+     
+    Example Usage :
+     
+     label.left(20)
+     label.left(<=20)
+     label.left(>=20)
+     label.left(20%)
+     
+     - Returns: Itself for chaining purposes
+     */
+    @discardableResult
+    func left(_ points: Double) -> Self {
+        position(.left, points: points)
     }
     
-    public func right(points:CGFloat) -> UIView {
-        return position(.Right, points: -points)
+    /** Sets the left margin for a view.
+     
+    Example Usage :
+     
+     label.left(20)
+     label.left(<=20)
+     label.left(>=20)
+     label.left(20%)
+     
+     - Returns: Itself for chaining purposes
+     */
+    @discardableResult
+    func left(_ points: CGFloat) -> Self {
+        left(Double(points))
     }
     
-    public func top(points:CGFloat) -> UIView {
-        return position(.Top, points: points)
+    /** Sets the left margin for a view.
+     
+    Example Usage :
+     
+     label.left(20)
+     label.left(<=20)
+     label.left(>=20)
+     label.left(20%)
+     
+     - Returns: Itself for chaining purposes
+     */
+    @discardableResult
+    func left(_ points: Int) -> Self {
+        left(Double(points))
     }
     
-    public func bottom(points:CGFloat) -> UIView {
-        return position(.Bottom, points: -points)
+    /** Sets the right margin for a view.
+     
+    Example Usage :
+     
+     label.right(20)
+     label.right(<=20)
+     label.right(>=20)
+     label.right(20%)
+     
+     - Returns: Itself for chaining purposes
+     */
+    @discardableResult
+    func right(_ points: Double) -> Self {
+        position(.right, points: -points)
     }
     
-    ///
-    public func left(fm:SteviaFlexibleMargin) -> UIView {
-        return position(.Left, relatedBy:fm.relation, points: fm.points)
+    /** Sets the right margin for a view.
+     
+    Example Usage :
+     
+     label.right(20)
+     label.right(<=20)
+     label.right(>=20)
+     label.right(20%)
+     
+     - Returns: Itself for chaining purposes
+     */
+    @discardableResult
+    func right(_ points: CGFloat) -> Self {
+        right(Double(points))
     }
     
-    public func right(fm:SteviaFlexibleMargin) -> UIView {
-        return position(.Right, relatedBy:fm.relation, points: -fm.points)
+    /** Sets the right margin for a view.
+     
+    Example Usage :
+     
+     label.right(20)
+     label.right(<=20)
+     label.right(>=20)
+     label.right(20%)
+     
+     - Returns: Itself for chaining purposes
+     */
+    @discardableResult
+    func right(_ points: Int) -> Self {
+        right(Double(points))
     }
     
-    public func top(fm:SteviaFlexibleMargin) -> UIView {
-        return position(.Top, relatedBy:fm.relation, points: fm.points)
+    /** Sets the top margin for a view.
+     
+    Example Usage :
+     
+     label.top(20)
+     label.top(<=20)
+     label.top(>=20)
+     label.top(20%)
+     
+    - Returns: Itself for chaining purposes
+    */
+    @discardableResult
+    func top(_ points: Double) -> Self {
+        position(.top, points: points)
     }
     
-    public func bottom(fm:SteviaFlexibleMargin) -> UIView {
-        return position(.Bottom, relatedBy:fm.relation, points: -fm.points)
+    /** Sets the top margin for a view.
+     
+    Example Usage :
+     
+     label.top(20)
+     label.top(<=20)
+     label.top(>=20)
+     label.top(20%)
+     
+    - Returns: Itself for chaining purposes
+    */
+    @discardableResult
+    func top(_ points: CGFloat) -> Self {
+        top(Double(points))
     }
     
-    ///
+    /** Sets the top margin for a view.
+     
+    Example Usage :
+     
+     label.top(20)
+     label.top(<=20)
+     label.top(>=20)
+     label.top(20%)
+     
+    - Returns: Itself for chaining purposes
+    */
+    @discardableResult
+    func top(_ points: Int) -> Self {
+        top(Double(points))
+    }
     
-    private func position(position:NSLayoutAttribute, relatedBy:NSLayoutRelation = .Equal, points:CGFloat) -> UIView {
+    /** Sets the bottom margin for a view.
+     
+    Example Usage :
+     
+     label.bottom(20)
+     label.bottom(<=20)
+     label.bottom(>=20)
+     label.bottom(20%)
+     
+    - Returns: Itself for chaining purposes
+    */
+    @discardableResult
+    func bottom(_ points: Double) -> Self {
+        position(.bottom, points: -points)
+    }
+    
+    /** Sets the bottom margin for a view.
+     
+    Example Usage :
+     
+     label.bottom(20)
+     label.bottom(<=20)
+     label.bottom(>=20)
+     label.bottom(20%)
+     
+    - Returns: Itself for chaining purposes
+    */
+    @discardableResult
+    func bottom(_ points: CGFloat) -> Self {
+        bottom(Double(points))
+    }
+    
+    /** Sets the bottom margin for a view.
+     
+    Example Usage :
+     
+     label.bottom(20)
+     label.bottom(<=20)
+     label.bottom(>=20)
+     label.bottom(20%)
+     
+    - Returns: Itself for chaining purposes
+    */
+    @discardableResult
+    func bottom(_ points: Int) -> Self {
+        bottom(Double(points))
+    }
+
+    /** Sets the left margin for a view.
+     
+    Example Usage :
+     
+     label.left(20)
+     label.left(<=20)
+     label.left(>=20)
+     label.left(20%)
+     
+    - Returns: Itself for chaining purposes
+    */
+    @discardableResult
+    func left(_ fm: SteviaFlexibleMargin) -> Self {
+        position(.left, relatedBy: fm.relation, points: fm.points)
+    }
+    
+    /** Sets the right margin for a view.
+     
+    Example Usage :
+     
+     label.right(20)
+     label.right(<=20)
+     label.right(>=20)
+     label.right(20%)
+     
+    - Returns: Itself for chaining purposes
+    */
+    @discardableResult
+    func right(_ fm: SteviaFlexibleMargin) -> Self {
+        // For right this should be inverted.
+        var n = SteviaFlexibleMargin()
+        n.points = -fm.points
+        if fm.relation == .greaterThanOrEqual {
+            n.relation = .lessThanOrEqual
+        }
+        if fm.relation == .lessThanOrEqual {
+            n.relation = .greaterThanOrEqual
+        }
+        return position(.right, relatedBy: n.relation, points: n.points)
+    }
+    
+    /** Sets the top margin for a view.
+     
+    Example Usage :
+     
+     label.top(20)
+     label.top(<=20)
+     label.top(>=20)
+     label.top(20%)
+     
+    - Returns: Itself for chaining purposes
+     */
+    @discardableResult
+    func top(_ fm: SteviaFlexibleMargin) -> Self {
+        position(.top, relatedBy: fm.relation, points: fm.points)
+    }
+    
+    /** Sets the bottom margin for a view.
+     
+    Example Usage :
+     
+     label.bottom(20)
+     label.bottom(<=20)
+     label.bottom(>=20)
+     label.bottom(20%)
+     
+    - Returns: Itself for chaining purposes
+    */
+    @discardableResult
+    func bottom(_ fm: SteviaFlexibleMargin) -> Self {
+        // For bottom this should be inverted.
+        var n = SteviaFlexibleMargin()
+        n.points = -fm.points
+        if fm.relation == .greaterThanOrEqual {
+            n.relation = .lessThanOrEqual
+        }
+        if fm.relation == .lessThanOrEqual {
+            n.relation = .greaterThanOrEqual
+        }
+        return position(.bottom, relatedBy: n.relation, points: n.points)
+    }
+    
+    /** Sets the leading margin for a view.
+     
+    Example Usage :
+     
+     label.leading(20)
+     label.leading(<=20)
+     label.leading(>=20)
+     label.leading(20%)
+     
+    - Returns: itself for chaining purposes
+    */
+    
+    @discardableResult
+    func leading(_ points: Double) -> UIView {
+        position(.leading, points: points)
+    }
+    
+    /** Sets the leading margin for a view.
+     
+    Example Usage :
+     
+     label.leading(20)
+     label.leading(<=20)
+     label.leading(>=20)
+     label.leading(20%)
+     
+    - Returns: itself for chaining purposes
+    */
+    @discardableResult
+    func leading(_ points: CGFloat) -> UIView {
+        leading(Double(points))
+    }
+    
+    /** Sets the leading margin for a view.
+     
+    Example Usage :
+     
+     label.leading(20)
+     label.leading(<=20)
+     label.leading(>=20)
+     label.leading(20%)
+     
+    - Returns: itself for chaining purposes
+    */
+    @discardableResult
+    func leading(_ points: Int) -> UIView {
+        leading(Double(points))
+    }
+    
+    @discardableResult
+    func leading(_ fm: SteviaFlexibleMargin) -> UIView {
+        position(.leading, relatedBy: fm.relation, points: fm.points)
+    }
+    
+    /** Sets the trailing margin for a view.
+     
+    Example Usage :
+     
+     label.trailing(20)
+     label.trailing(<=20)
+     label.trailing(>=20)
+     label.trailing(20%)
+     
+    - Returns: itself for chaining purposes
+    */
+    @discardableResult
+    func trailing(_ points: Double) -> UIView {
+        position(.trailing, points: -points)
+    }
+    
+    /** Sets the trailing margin for a view.
+     
+    Example Usage :
+     
+     label.trailing(20)
+     label.trailing(<=20)
+     label.trailing(>=20)
+     label.trailing(20%)
+     
+    - Returns: itself for chaining purposes
+    */
+    @discardableResult
+    func trailing(_ points: CGFloat) -> UIView {
+        trailing(Double(points))
+    }
+    
+    /** Sets the trailing margin for a view.
+     
+    Example Usage :
+     
+     label.trailing(20)
+     label.trailing(<=20)
+     label.trailing(>=20)
+     label.trailing(20%)
+     
+    - Returns: itself for chaining purposes
+    */
+    @discardableResult
+    func trailing(_ points: Int) -> UIView {
+        trailing(Double(points))
+    }
+
+    @discardableResult
+    func trailing(_ fm: SteviaFlexibleMargin) -> UIView {
+        var invertedRelation = fm.relation
+        if invertedRelation == .lessThanOrEqual {
+            invertedRelation = .greaterThanOrEqual
+        } else if invertedRelation == .greaterThanOrEqual {
+            invertedRelation = .lessThanOrEqual
+        }
+        return position(.trailing, relatedBy: invertedRelation!, points: -fm.points)
+    }
+    
+    fileprivate func position(_ position: NSLayoutConstraint.Attribute,
+                              relatedBy: NSLayoutConstraint.Relation = .equal,
+                              points: Double) -> Self {
         if let spv = superview {
-            let c = constraint(item: self, attribute: position, toItem: spv, relatedBy:relatedBy, constant: points)
+            let c = constraint(item: self, attribute: position,
+                               relatedBy: relatedBy,
+                               toItem: spv,
+                               constant: points)
             spv.addConstraint(c)
         }
         return self
     }
-
 }
+#endif

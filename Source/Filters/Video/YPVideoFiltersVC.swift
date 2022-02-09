@@ -9,7 +9,6 @@
 import UIKit
 import Photos
 import PryntTrimmerView
-import Stevia
 
 public final class YPVideoFiltersVC: UIViewController, IsMediaFilterVC {
 
@@ -157,23 +156,23 @@ public final class YPVideoFiltersVC: UIViewController, IsMediaFilterVC {
         )
 
         trimBottomItem.leading(0).height(40)
-        trimBottomItem.Bottom == view.safeAreaLayoutGuide.Bottom
-        trimBottomItem.Trailing == coverBottomItem.Leading
-        coverBottomItem.Bottom == view.safeAreaLayoutGuide.Bottom
+        trimBottomItem.SteviaBottom == view.safeAreaLayoutGuide.SteviaBottom
+        trimBottomItem.SteviaTrailing == coverBottomItem.SteviaLeading
+        coverBottomItem.SteviaBottom == view.safeAreaLayoutGuide.SteviaBottom
         coverBottomItem.trailing(0)
         equal(sizes: trimBottomItem, coverBottomItem)
 
         videoView.heightEqualsWidth().fillHorizontally().top(0)
-        videoView.Bottom == trimmerContainerView.Top
+        videoView.SteviaBottom == trimmerContainerView.SteviaTop
 
         coverImageView.followEdges(videoView)
 
         trimmerContainerView.fillHorizontally()
-        trimmerContainerView.Top == videoView.Bottom
-        trimmerContainerView.Bottom == trimBottomItem.Top
+        trimmerContainerView.SteviaTop == videoView.SteviaBottom
+        trimmerContainerView.SteviaBottom == trimBottomItem.SteviaTop
 
-        trimmerView.fillHorizontally(m: 30).centerVertically()
-        trimmerView.Height == trimmerContainerView.Height / 3
+        trimmerView.fillHorizontally(padding: 30).centerVertically()
+        trimmerView.SteviaHeight == trimmerContainerView.SteviaHeight / 3
 
         coverThumbSelectorView.followEdges(trimmerView)
     }
@@ -227,7 +226,7 @@ public final class YPVideoFiltersVC: UIViewController, IsMediaFilterVC {
         didCancel?()
     }
 
-    // MARK: - Bottom buttons
+    // MARK: - SteviaBottom buttons
 
     @objc private func selectTrim() {
         title = YPConfig.wordings.trim

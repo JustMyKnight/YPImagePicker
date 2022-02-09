@@ -186,22 +186,22 @@ extension YPCropVC: UIGestureRecognizerDelegate {
         let cropRect = v.cropArea.frame
         var correctedFrame = imageRect
         
-        // Cap Top.
+        // Cap SteviaTop.
         if imageRect.minY > cropRect.minY {
             correctedFrame.origin.y = cropRect.minY
         }
         
-        // Cap Bottom.
+        // Cap SteviaBottom.
         if imageRect.maxY < cropRect.maxY {
             correctedFrame.origin.y = cropRect.maxY - imageRect.height
         }
         
-        // Cap Left.
+        // Cap SteviaLeft.
         if imageRect.minX > cropRect.minX {
             correctedFrame.origin.x = cropRect.minX
         }
         
-        // Cap Right.
+        // Cap SteviaRight.
         if imageRect.maxX < cropRect.maxX {
             correctedFrame.origin.x = cropRect.maxX - imageRect.width
         }
