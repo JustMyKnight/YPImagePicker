@@ -1,12 +1,3 @@
-//
-//  YPAssetZoomableView.swift
-//  YPImgePicker
-//
-//  Created by Sacha Durand Saint Omer on 2015/11/16.
-//  Edited by Nik Kov || nik-kov.com on 2018/04
-//  Copyright © 2015 Yummypets. All rights reserved.
-//
-
 import UIKit
 import Photos
 
@@ -33,6 +24,7 @@ final class YPAssetZoomableView: UIScrollView {
     public var minWidthForItem: CGFloat? = YPConfig.library.minWidthForItem
     public var isMultipleSelected: Bool = false
     public var firstSelectedType: PhotoFormat = .portrait
+    public var isSquare: Bool = YPConfig.library.isSquareByDefault
     
     fileprivate var currentAsset: PHAsset?
     
@@ -197,27 +189,55 @@ fileprivate extension YPAssetZoomableView {
 
         var aspectRatio: CGFloat = 1
         var zoomScale: CGFloat = 1
-
-        if w > h { // Landscape
-            aspectRatio = h / w
-            if isMultiple {
-                switch firstSelectedType {
-                case .portrait:
-                    view.frame.size.height = screenWidth
-                case .landscape, .square:
-                    view.frame.size.width = screenWidth * (w / h)
-                    view.frame.size.height = screenWidth
-                }
-            } else {
+        
+        if isSquare {
+            if w > h {
                 view.frame.size.width = screenWidth * (w / h)
                 view.frame.size.height = screenWidth
-                firstSelectedType = .landscape
+            } else if h > w {
+                view.frame.size.width = screenWidth
+                view.frame.size.height = screenWidth * (h / w)
+            } else {
+                view.frame.size.width = screenWidth
+                view.frame.size.height = screenWidth
             }
-        } else if h > w { // Portrait
-            aspectRatio = 4 / 5
-            if isMultiple {
-                switch firstSelectedType {
-                case .portrait:
+        } else {
+            if w > h { // Landscape
+                aspectRatio = h / w
+                if isMultiple {
+                    switch firstSelectedType {
+                    case .portrait:
+                        view.frame.size.height = screenWidth
+                    case .landscape, .square:
+                        view.frame.size.width = screenWidth * (w / h)
+                        view.frame.size.height = screenWidth
+                    }
+                } else {
+                    view.frame.size.width = screenWidth * (w / h)
+                    view.frame.size.height = screenWidth
+                    firstSelectedType = .landscape
+                }
+            } else if h > w { // Portrait
+                aspectRatio = 4 / 5
+                if isMultiple {
+                    switch firstSelectedType {
+                    case .portrait:
+                        view.frame.size.width = screenWidth * aspectRatio
+                        let height = screenWidth * (h / w) * aspectRatio
+                        if height < screenWidth {
+                            view.frame.size.height = screenWidth
+                        } else {
+                            view.frame.size.height = height
+                        }
+                        if let minWidth = minWidthForItem {
+                            let k = minWidth / screenWidth
+                            zoomScale = (h / w) * k
+                        }
+                    case .landscape, .square:
+                        view.frame.size.width = screenWidth
+                        view.frame.size.height = screenWidth * (h / w)
+                    }
+                } else {
                     view.frame.size.width = screenWidth * aspectRatio
                     let height = screenWidth * (h / w) * aspectRatio
                     if height < screenWidth {
@@ -229,37 +249,22 @@ fileprivate extension YPAssetZoomableView {
                         let k = minWidth / screenWidth
                         zoomScale = (h / w) * k
                     }
-                case .landscape, .square:
-                    view.frame.size.width = screenWidth
-                    view.frame.size.height = screenWidth * (h / w)
+                    firstSelectedType = .portrait
                 }
-            } else {
-                view.frame.size.width = screenWidth * aspectRatio
-                let height = screenWidth * (h / w) * aspectRatio
-                if height < screenWidth {
-                    view.frame.size.height = screenWidth
+            } else { // Square
+                if isMultiple {
+                    switch firstSelectedType {
+                    case .portrait:
+                        view.frame.size.height = screenWidth
+                    case .landscape, .square:
+                        view.frame.size.width = screenWidth
+                        view.frame.size.height = screenWidth
+                    }
                 } else {
-                    view.frame.size.height = height
-                }
-                if let minWidth = minWidthForItem {
-                    let k = minWidth / screenWidth
-                    zoomScale = (h / w) * k
-                }
-                firstSelectedType = .portrait
-            }
-        } else { // Square
-            if isMultiple {
-                switch firstSelectedType {
-                case .portrait:
-                    view.frame.size.height = screenWidth
-                case .landscape, .square:
                     view.frame.size.width = screenWidth
                     view.frame.size.height = screenWidth
+                    firstSelectedType = .square
                 }
-            } else {
-                view.frame.size.width = screenWidth
-                view.frame.size.height = screenWidth
-                firstSelectedType = .square
             }
         }
         
