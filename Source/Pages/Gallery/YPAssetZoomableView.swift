@@ -17,6 +17,13 @@ protocol YPAssetZoomableViewDelegate: AnyObject {
 }
 
 final class YPAssetZoomableView: UIScrollView {
+    
+    enum PhotoFormat {
+        case landscape
+        case portrait
+        case square
+    }
+    
     public weak var zoomableViewDelegate: YPAssetZoomableViewDelegate?
     public var cropAreaDidChange = {}
     public var isVideoMode = false
@@ -24,6 +31,8 @@ final class YPAssetZoomableView: UIScrollView {
     public var videoView = YPVideoView()
     public var squaredZoomScale: CGFloat = 1
     public var minWidthForItem: CGFloat? = YPConfig.library.minWidthForItem
+    public var isMultipleSelected: Bool = false
+    public var firstSelectedType: PhotoFormat = .portrait
     
     fileprivate var currentAsset: PHAsset?
     
@@ -74,7 +83,7 @@ final class YPAssetZoomableView: UIScrollView {
             
             strongSelf.videoView.setPreviewImage(preview)
             
-            strongSelf.setAssetFrame(for: strongSelf.videoView, with: preview)
+            strongSelf.setAssetFrame(for: strongSelf.videoView, with: preview, isMultiple: false)
             
             completion()
             
@@ -123,7 +132,7 @@ final class YPAssetZoomableView: UIScrollView {
             
             strongSelf.photoImageView.image = image
            
-            strongSelf.setAssetFrame(for: strongSelf.photoImageView, with: image)
+            strongSelf.setAssetFrame(for: strongSelf.photoImageView, with: image, isMultiple: strongSelf.isMultipleSelected)
                 
             // Stored crop position in multiple selection
             if let scp173 = storedCropPosition {
@@ -175,7 +184,7 @@ final class YPAssetZoomableView: UIScrollView {
 
 fileprivate extension YPAssetZoomableView {
     
-    func setAssetFrame(`for` view: UIView, with image: UIImage) {
+    func setAssetFrame(`for` view: UIView, with image: UIImage, isMultiple: Bool) {
         // Reseting the previous scale
         self.minimumZoomScale = 1
         self.zoomScale = 1
@@ -191,20 +200,57 @@ fileprivate extension YPAssetZoomableView {
 
         if w > h { // Landscape
             aspectRatio = h / w
-            view.frame.size.width = screenWidth
-            view.frame.size.height = screenWidth * aspectRatio
+            if isMultiple {
+                switch firstSelectedType {
+                case .portrait:
+                    view.frame.size.height = screenWidth
+                case .landscape, .square:
+                    view.frame.size.width = screenWidth * (w / h)
+                    view.frame.size.height = screenWidth
+                }
+            } else {
+                view.frame.size.width = screenWidth * (w / h)
+                view.frame.size.height = screenWidth
+                firstSelectedType = .landscape
+            }
         } else if h > w { // Portrait
-            aspectRatio = w / h
-            view.frame.size.width = screenWidth * aspectRatio
-            view.frame.size.height = screenWidth
-            
-            if let minWidth = minWidthForItem {
-                let k = minWidth / screenWidth
-                zoomScale = (h / w) * k
+            aspectRatio = 4 / 5
+            if isMultiple {
+                switch firstSelectedType {
+                case .portrait:
+                    view.frame.size.width = screenWidth * aspectRatio
+                    view.frame.size.height = screenWidth * (h / w) * aspectRatio
+                    if let minWidth = minWidthForItem {
+                        let k = minWidth / screenWidth
+                        zoomScale = (h / w) * k
+                    }
+                case .landscape, .square:
+                    view.frame.size.width = screenWidth
+                    view.frame.size.height = screenWidth * (h / w)
+                }
+            } else {
+                view.frame.size.width = screenWidth * aspectRatio
+                view.frame.size.height = screenWidth * (h / w) * aspectRatio
+                if let minWidth = minWidthForItem {
+                    let k = minWidth / screenWidth
+                    zoomScale = (h / w) * k
+                }
+                firstSelectedType = .portrait
             }
         } else { // Square
-            view.frame.size.width = screenWidth
-            view.frame.size.height = screenWidth
+            if isMultiple {
+                switch firstSelectedType {
+                case .portrait:
+                    view.frame.size.height = screenWidth
+                case .landscape, .square:
+                    view.frame.size.width = screenWidth
+                    view.frame.size.height = screenWidth
+                }
+            } else {
+                view.frame.size.width = screenWidth
+                view.frame.size.height = screenWidth
+                firstSelectedType = .square
+            }
         }
         
         // Centering image view
