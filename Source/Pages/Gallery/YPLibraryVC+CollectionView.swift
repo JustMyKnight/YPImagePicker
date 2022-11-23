@@ -123,8 +123,6 @@ extension YPLibraryVC: UICollectionViewDelegate {
         }
 
         cell.representedAssetIdentifier = asset.localIdentifier
-        cell.multipleSelectionIndicator.selectionColor =
-            YPConfig.colors.multipleItemsSelectedCircleColor ?? YPConfig.colors.tintColor
         mediaManager.imageManager?.requestImage(for: asset,
                                    targetSize: v.cellSize(),
                                    contentMode: .aspectFill,
