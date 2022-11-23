@@ -219,7 +219,12 @@ fileprivate extension YPAssetZoomableView {
                 switch firstSelectedType {
                 case .portrait:
                     view.frame.size.width = screenWidth * aspectRatio
-                    view.frame.size.height = screenWidth * (h / w) * aspectRatio
+                    let height = screenWidth * (h / w) * aspectRatio
+                    if height < screenWidth {
+                        view.frame.size.height = screenWidth
+                    } else {
+                        view.frame.size.height = height
+                    }
                     if let minWidth = minWidthForItem {
                         let k = minWidth / screenWidth
                         zoomScale = (h / w) * k
@@ -230,7 +235,12 @@ fileprivate extension YPAssetZoomableView {
                 }
             } else {
                 view.frame.size.width = screenWidth * aspectRatio
-                view.frame.size.height = screenWidth * (h / w) * aspectRatio
+                let height = screenWidth * (h / w) * aspectRatio
+                if height < screenWidth {
+                    view.frame.size.height = screenWidth
+                } else {
+                    view.frame.size.height = height
+                }
                 if let minWidth = minWidthForItem {
                     let k = minWidth / screenWidth
                     zoomScale = (h / w) * k

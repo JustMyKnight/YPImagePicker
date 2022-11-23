@@ -175,6 +175,7 @@ internal final class YPLibraryVC: UIViewController, YPPermissionCheckable {
                 self?.selectedItems.removeAll()
             }
             self?.toggleMultipleSelection()
+            self?.v.assetZoomableView.isMultipleSelected.toggle()
         }
     }
     
