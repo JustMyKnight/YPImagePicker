@@ -20,11 +20,11 @@ public struct YPImagePickerConfiguration {
     public static var widthOniPad: CGFloat = -1
     
     public static var screenWidth: CGFloat {
-		var screenWidth: CGFloat = UIScreen.main.bounds.width
-		if UIDevice.current.userInterfaceIdiom == .pad && YPImagePickerConfiguration.widthOniPad > 0 {
-			screenWidth =  YPImagePickerConfiguration.widthOniPad
-		}
-		return screenWidth
+        var screenWidth: CGFloat = UIScreen.main.bounds.width
+        if UIDevice.current.userInterfaceIdiom == .pad && YPImagePickerConfiguration.widthOniPad > 0 {
+            screenWidth =  YPImagePickerConfiguration.widthOniPad
+        }
+        return screenWidth
     }
 
     /// If don't want to have logs from picker, set it to false.
@@ -142,43 +142,95 @@ public struct YPImagePickerConfiguration {
     /// Migration
     
     @available(iOS, obsoleted: 3.0.0, renamed: "video.compression")
-    public var videoCompression: String = AVAssetExportPresetHighestQuality
+    public var videoCompression: String {
+    get {
+        return AVAssetExportPresetHighestQuality
+        }
+    }
     
     @available(iOS, obsoleted: 3.0.0, renamed: "video.fileType")
-    public var videoExtension: AVFileType = .mov
-    
+    public var videoExtension: AVFileType {
+        get {
+            return .mov
+        }
+    }
+
     @available(iOS, obsoleted: 3.0.0, renamed: "video.recordingTimeLimit")
-    public var videoRecordingTimeLimit: TimeInterval = 60.0
-    
+    public var videoRecordingTimeLimit: TimeInterval {
+        get {
+            return 60.0
+        }
+    }
+
     @available(iOS, obsoleted: 3.0.0, renamed: "video.libraryTimeLimit")
-    public var videoFromLibraryTimeLimit: TimeInterval = 60.0
-    
-    @available(iOS, obsoleted: 3.0.0, renamed: "video.minimumTimeLimit")
-    public var videoMinimumTimeLimit: TimeInterval = 3.0
-    
+    public var videoFromLibraryTimeLimit: TimeInterval {
+        get {
+            return 60.0
+        }
+    }
+
+     @available(iOS, obsoleted: 3.0.0, renamed: "video.minimumTimeLimit")
+    public var videoMinimumTimeLimit: TimeInterval {
+        get {
+            return 3.0
+        }
+    }
+
     @available(iOS, obsoleted: 3.0.0, renamed: "video.trimmerMaxDuration")
-    public var trimmerMaxDuration: Double = 60.0
+    public var trimmerMaxDuration: Double {
+        get {
+            return 60.0
+        }
+    }
 
     @available(iOS, obsoleted: 3.0.0, renamed: "video.trimmerMinDuration")
-    public var trimmerMinDuration: Double = 3.0
-    
+    public var trimmerMinDuration: Double {
+        get {
+            return 3.0
+        }
+    }
+
     @available(iOS, obsoleted: 3.0.0, renamed: "library.onlySquare")
-    public var onlySquareImagesFromLibrary = false
-    
+    public var onlySquareImagesFromLibrary: Bool {
+        get {
+            return false
+        }
+    }
+
     @available(iOS, obsoleted: 3.0.0, renamed: "library.onlySquare")
-    public var onlySquareFromLibrary = false
-    
+    public var onlySquareFromLibrary: Bool {
+        get {
+            return false
+        }
+    }
+
     @available(iOS, obsoleted: 3.0.0, renamed: "targetImageSize")
-    public var libraryTargetImageSize = YPImageSize.original
-    
+    public var libraryTargetImageSize: Any {
+        get {
+            return YPImageSize.original
+        }
+    }
+
     @available(iOS, obsoleted: 3.0.0, renamed: "library.mediaType")
-    public var showsVideoInLibrary = false
-    
+    public var showsVideoInLibrary: Bool {
+        get {
+            return false
+        }
+    }
+
     @available(iOS, obsoleted: 3.0.0, renamed: "library.mediaType")
-    public var libraryMediaType = YPlibraryMediaType.photo
-    
+    public var libraryMediaType: Any {
+        get {
+            return YPlibraryMediaType.photo
+        }
+    }
+
     @available(iOS, obsoleted: 3.0.0, renamed: "library.maxNumberOfItems")
-    public var maxNumberOfItems = 1
+    public var maxNumberOfItems: Int {
+        get {
+            return 1
+        }
+    }
     
 }
 
@@ -193,7 +245,7 @@ public struct YPConfigLibrary {
     /// Sets the cropping style to square or not. Ignored if `onlySquare` is true. Defaults to true.
     public var isSquareByDefault = true
     
-	/// Minimum width, to prevent selectiong too high images. Have sense if onlySquare is true and the image is portrait.
+    /// Minimum width, to prevent selectiong too high images. Have sense if onlySquare is true and the image is portrait.
     public var minWidthForItem: CGFloat?
     
     /// Choose what media types are available in the library. Defaults to `.photo`.
